@@ -19,6 +19,7 @@ module.exports = {
       },
       email: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
         validate: {
           isEmail: true,
@@ -29,7 +30,7 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          isEmail: true,
+          len: [6],
           notEmpty: true
         }
       }
