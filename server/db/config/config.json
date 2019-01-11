@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "adminadmin",
-    "database": "hyf",
+    "database": "lnf",
     "host": "localhost",
     "dialect": "mysql"
   }
