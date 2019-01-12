@@ -14,6 +14,10 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+if (process.env.NODE_ENV !== 'production') {
+  require('./utils/setupApiDocs')(app);
+}
+
 app.use('/auth', require('./api/auth'));
 app.use('/api', require('./api'));
 
