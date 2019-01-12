@@ -43,6 +43,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  User.associate = ({ Post }) => {
+    User.hasMany(Post, {
+      foreignKey: 'userId'
+    });
+  };
+
   User.beforeCreate(async (user, options) => {
     try {
       const hashed = await bcrypt.hash(user.password, 10);
