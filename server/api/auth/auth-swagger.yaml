@@ -1,0 +1,80 @@
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Create new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              example:
+                email: test@test.com
+                password: '123456'
+      responses:
+        '200':
+          description: user object
+          content:
+            application/json:
+              schema:
+                type: object
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Log In
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              example:
+                email: test@test.com
+                password: '123456'
+      responses:
+        '200':
+          description: authorization token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+  /auth/validateToken:
+    post:
+      tags:
+        - Auth
+      summary: validate auth token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+      responses:
+        '200':
+          description: refreshed authorization token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string

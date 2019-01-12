@@ -1,0 +1,37 @@
+paths:
+  /api/post:
+    post:
+      security:
+        - jwt: []
+      tags:
+        - Post
+      summary: Create new Post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                breed:
+                  type: string
+                gender:
+                  type: string
+                  oneOf:
+                    - MALE
+                    - FEMALE
+              example:
+                description: some crazy dog is wandering around.. send help
+                breed: bulldog
+                gender: FEMALE
+      responses:
+        '200':
+          description: Post object
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'

@@ -1,0 +1,17 @@
+openapi: 3.0.0
+info:
+  title: Lost and Found API
+  version: 0.0.1
+tags:
+  - name: Auth
+servers:
+  - url: http://localhost:1234
+components:
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
