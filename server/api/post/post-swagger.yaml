@@ -35,3 +35,18 @@ paths:
                 type: object
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+    get:
+      security:
+        - jwt: []
+      tags:
+        - Post
+      summary: Get all Posts
+      responses:
+        '200':
+          description: List with all Post objectecs
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
