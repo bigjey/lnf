@@ -2,5 +2,11 @@
   "name": "lnf",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "createDB": "cd server && npx sequelize db:create",
+    "migrate": "cd server && npx sequelize db:migrate",
+    "migrateAll": "cd server && npx sequelize db:migrate:undo:all && npx sequelize db:migrate",
+    "server:start:dev": "cd server && nodemon ."
+  }
 }
