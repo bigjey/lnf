@@ -1,7 +1,7 @@
 const apiRouter = require('express').Router();
 
-apiRouter.use((req, res) => {
-  res.send('hi');
-});
+const postRouter = require('./post');
+
+apiRouter.use('/post', postRouter);
 
 module.exports = apiRouter;
