@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Button } from 'react-native';
-
 import { inject, observer } from 'mobx-react';
 
 const instructions = Platform.select({
@@ -10,22 +9,15 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
-@observer
-class App extends Component {
-  render() {
-    const { value, inc } = this.props.store;
-
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-        <Text>{value}</Text>
-        <Button onPress={() => inc()} title="Nav" />
-      </View>
-    );
-  }
-}
+const App = ({ store: { value, inc } }) => (
+  <View style={styles.container}>
+    <Text style={styles.welcome}>Welcome to React Native!</Text>
+    <Text style={styles.instructions}>To get started, edit App.js</Text>
+    <Text style={styles.instructions}>{instructions}</Text>
+    <Text>{value}</Text>
+    <Button onPress={() => inc()} title="Nav" />
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -46,4 +38,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default inject('store')(App);
+export default inject('store')(observer(App));
