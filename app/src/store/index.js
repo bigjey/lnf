@@ -1,10 +1,12 @@
-import { createStore, applyMiddleware } from "redux";
-import thunk from 'redux-thunk';
-import rootReducer from './rootReducer';
+import { action, observable } from 'mobx';
 
-export default function setupStore() {
-    return createStore(
-        rootReducer,
-        applyMiddleware(thunk)
-    );
+class AppState {
+  @observable value = 1;
+
+  @action.bound
+  inc(amount) {
+    this.value += amount;
+  }
 }
+
+export default new AppState();
