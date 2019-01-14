@@ -4,7 +4,7 @@ class AppState {
   @observable value = 1;
 
   @action.bound
-  inc(amount) {
+  inc(amount = 1) {
     this.value += amount;
   }
 }

@@ -21,7 +21,7 @@ class App extends Component {
         <Text style={styles.instructions}>To get started, edit App.js</Text>
         <Text style={styles.instructions}>{instructions}</Text>
         <Text>{value}</Text>
-        <Button onPress={inc} title="Nav" />
+        <Button onPress={() => inc()} title="Nav" />
       </View>
     );
   }

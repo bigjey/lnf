@@ -1,9 +1,8 @@
 import { Navigation } from 'react-native-navigation';
 import { Provider } from 'mobx-react';
 
-const store = '../store';
+import store from '../store';
 
-// screens
 import TestScreen from './TestScreen/TestScreen';
 
 export default () => {
@@ -18,9 +17,9 @@ export default () => {
     Navigation.setRoot({
       root: {
         component: {
-          name: 'test'
-        }
-      }
+          name: 'test',
+        },
+      },
     });
   });
 };
