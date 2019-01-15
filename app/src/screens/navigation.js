@@ -72,7 +72,9 @@ export default () => {
 
   Navigation.events().registerAppLaunchedListener(async () => {
     await setRootLayout('loader');
-
     await store.checkAuth();
+
+    // test nav
+    // await setRootLayout('home');
   });
 };
