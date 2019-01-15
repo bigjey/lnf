@@ -1,6 +1,8 @@
 import { Navigation } from 'react-native-navigation';
 import { Provider } from 'mobx-react';
 
+import { setRootComponent } from '../services/navigation';
+
 import store from '../store';
 
 import TestScreen from './TestScreen/TestScreen';
@@ -9,6 +11,12 @@ import Register from './Register/Register';
 import Loader from './Loader/Loader';
 
 export default () => {
+  Navigation.registerComponentWithRedux(
+    'app.main',
+    () => TestScreen,
+    Provider,
+    store
+  );
   Navigation.registerComponentWithRedux(
     'app.loader',
     () => Loader,
@@ -29,32 +37,14 @@ export default () => {
   );
 
   Navigation.events().registerAppLaunchedListener(async () => {
-    Navigation.setRoot({
-      root: {
-        component: {
-          name: 'app.loader',
-        },
-      },
-    });
+    await setRootComponent('app.loader');
 
     await store.checkAuth();
 
     if (store.user === null) {
-      Navigation.setRoot({
-        root: {
-          component: {
-            name: 'app.login',
-          },
-        },
-      });
+      setRootComponent('app.login');
     } else {
-      Navigation.setRoot({
-        root: {
-          component: {
-            name: 'app.register',
-          },
-        },
-      });
+      setRootComponent('app.main');
     }
   });
 };

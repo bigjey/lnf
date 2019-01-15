@@ -1,15 +1,15 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet, AsyncStorage } from 'react-native';
 
-import { TOKEN_STORAGE_KEY } from '../../constants';
+import { setRootComponent } from '../../services/navigation';
 
 const Register = () => (
   <View style={styles.container}>
     <Text>Register</Text>
     <Button
-      title="remove token"
-      onPress={async () => {
-        await AsyncStorage.removeItem(TOKEN_STORAGE_KEY);
+      title="Log In"
+      onPress={() => {
+        setRootComponent('app.login');
       }}
     />
   </View>

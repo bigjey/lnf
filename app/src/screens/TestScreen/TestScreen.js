@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Platform, StyleSheet, Text, View, Button } from 'react-native';
 import { inject, observer } from 'mobx-react';
 
@@ -9,13 +9,14 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
-const App = ({ store: { value, inc } }) => (
+const App = ({ store: { value, inc, logout } }) => (
   <View style={styles.container}>
     <Text style={styles.welcome}>Welcome to React Native!</Text>
     <Text style={styles.instructions}>To get started, edit App.js</Text>
     <Text style={styles.instructions}>{instructions}</Text>
     <Text>{value}</Text>
-    <Button onPress={() => inc()} title="Nav" />
+    <Button onPress={() => inc()} title="Increment" />
+    <Button onPress={() => logout()} title="Log Out" />
   </View>
 );
 

@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const db = require('../../db');
 
 const jwtOptions = {
-  expiresIn: '7d'
+  expiresIn: '7d',
 };
 
 const login = async (req, res, next) => {
@@ -13,12 +13,16 @@ const login = async (req, res, next) => {
 
     const user = await db.User.findOne({ where });
     if (!user) {
-      throw new Error('Wrong email or password');
+      return res.status(400).json({
+        errors: [{ message: 'Wrong email or password', path: 'email' }],
+      });
     }
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      throw new Error('Wrong email or password');
+      return res.status(400).json({
+        errors: [{ message: 'Wrong email or password', path: 'email' }],
+      });
     }
 
     const payload = { userId: user.id };
@@ -58,5 +62,5 @@ const validate = async (req, res, next) => {
 module.exports = {
   login,
   register,
-  validate
+  validate,
 };
