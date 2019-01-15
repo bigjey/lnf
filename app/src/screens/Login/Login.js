@@ -1,19 +1,27 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, TextInput } from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import { Formik } from 'formik';
 import axios from 'axios';
 import { inject } from 'mobx-react';
 
-import { setRootComponent } from '../../services/navigation';
+import { setRootLayout } from '../../services/navigation';
 
-const Login = ({ store: { login } }) => (
+const Register = ({ store: { login } }) => (
   <View style={styles.container}>
-    <Text>Login</Text>
+    <Text style={styles.formTitle}>Sign In</Text>
     <Formik
       initialValues={{ email: '', password: '' }}
       onSubmit={async (values, { setErrors }) => {
         try {
           const { data } = await axios.post('/auth/login', values);
+
           login(data.token);
         } catch (error) {
           if (
@@ -41,6 +49,8 @@ const Login = ({ store: { login } }) => (
       {({ handleChange, handleBlur, values, errors, handleSubmit }) => (
         <View>
           <TextInput
+            style={styles.input}
+            placeholder="email"
             onChangeText={handleChange('email')}
             onBlur={handleBlur('email')}
             autoCapitalize="none"
@@ -52,6 +62,8 @@ const Login = ({ store: { login } }) => (
           )}
 
           <TextInput
+            style={styles.input}
+            placeholder="password"
             onChangeText={handleChange('password')}
             onBlur={handleBlur('password')}
             autoCapitalize="none"
@@ -64,12 +76,14 @@ const Login = ({ store: { login } }) => (
         </View>
       )}
     </Formik>
-    <Button
-      title="Create Account"
+    <TouchableOpacity
+      style={styles.secondaryButton}
       onPress={() => {
-        setRootComponent('app.register');
+        setRootLayout('register');
       }}
-    />
+    >
+      <Text>Create new Account</Text>
+    </TouchableOpacity>
   </View>
 );
 
@@ -80,9 +94,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
+  formTitle: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
   errorMessage: {
     color: 'red',
   },
+  input: {
+    borderColor: '#888',
+    borderWidth: 1,
+    minWidth: 200,
+    padding: 8,
+  },
+  secondaryButton: {
+    fontSize: 11,
+  },
 });
 
-export default inject('store')(Login);
+export default inject('store')(Register);

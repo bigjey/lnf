@@ -1,14 +1,18 @@
+import React from 'react';
 import { Navigation } from 'react-native-navigation';
 import { Provider } from 'mobx-react';
 
-import { setRootComponent } from '../services/navigation';
+import { setRootLayout } from '../services/navigation';
 
 import store from '../store';
 
 import TestScreen from './TestScreen/TestScreen';
 import Login from './Login/Login';
 import Register from './Register/Register';
-import Loader from './Loader/Loader';
+import Placeholder from './Placeholder/Placeholder';
+import PostsList from './PostsList/PostsList';
+import PostDetails from './PostDetails/PostDetails';
+import Settings from './Settings/Settings';
 
 export default () => {
   Navigation.registerComponentWithRedux(
@@ -17,12 +21,42 @@ export default () => {
     Provider,
     store
   );
+
   Navigation.registerComponentWithRedux(
     'app.loader',
-    () => Loader,
+    () => () => <Placeholder>Loading</Placeholder>,
     Provider,
     store
   );
+
+  Navigation.registerComponentWithRedux(
+    'app.postsList',
+    () => PostsList,
+    Provider,
+    store
+  );
+
+  Navigation.registerComponentWithRedux(
+    'app.postDetails',
+    () => PostDetails,
+    Provider,
+    store
+  );
+
+  Navigation.registerComponentWithRedux(
+    'app.settings',
+    () => Settings,
+    Provider,
+    store
+  );
+
+  Navigation.registerComponentWithRedux(
+    'app.createPost',
+    () => () => <Placeholder>Create Post</Placeholder>,
+    Provider,
+    store
+  );
+
   Navigation.registerComponentWithRedux(
     'app.login',
     () => Login,
@@ -37,14 +71,8 @@ export default () => {
   );
 
   Navigation.events().registerAppLaunchedListener(async () => {
-    await setRootComponent('app.loader');
+    await setRootLayout('loader');
 
     await store.checkAuth();
-
-    if (store.user === null) {
-      setRootComponent('app.login');
-    } else {
-      setRootComponent('app.main');
-    }
   });
 };
