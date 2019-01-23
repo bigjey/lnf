@@ -30,6 +30,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM('MALE', 'FEMALE'),
         defaultValue: null
       },
+      image: {
+        type: DataTypes.STRING
+      },
       userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
