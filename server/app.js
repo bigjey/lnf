@@ -21,6 +21,8 @@ if (process.env.NODE_ENV !== 'production') {
 app.use('/auth', require('./api/auth'));
 app.use('/api', require('./api'));
 
+app.use(express.static('uploads'));
+
 app.use(require('./utils/errorHandler'));
 
 app.start = () => {
