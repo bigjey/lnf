@@ -29,6 +29,12 @@ const getAllPosts = async (req, res, next) => {
   try {
     const posts = await db.Post.findAll({});
 
+    posts.forEach(p => {
+      if (p.image) {
+        p.image = `${req.app.get('baseUrl')}/${p.image}`;
+      }
+    })
+
     res.json(posts);
   } catch (err) {
     return next(err);
