@@ -17,6 +17,8 @@ paths:
                   type: string
                 breed:
                   type: string
+                image:
+                  type: string(base64)
                 gender:
                   type: string
                   oneOf:
