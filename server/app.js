@@ -2,10 +2,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 
 app.set('secret', process.env.SECRET);
+app.set('baseUrl', `http://localhost:${process.env.PORT}`)
 
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
@@ -27,7 +29,7 @@ app.use(require('./utils/errorHandler'));
 
 app.start = () => {
   app.listen(process.env.PORT, () => {
-    console.log(`app is running at http://localhost:${process.env.PORT}`);
+    console.log(`app is running at ${app.get('baseUrl')}`);
   });
 };
 
