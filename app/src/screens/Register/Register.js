@@ -1,15 +1,13 @@
 import React from 'react';
 import {
   View,
-  Text,
-  Button,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
 } from 'react-native';
 import { Formik } from 'formik';
 import axios from 'axios';
 import { inject } from 'mobx-react';
+import { TextInput, Button, Text, Title } from '@shoutem/ui';
 
 import { setRootLayout } from '../../services/navigation';
 
@@ -47,7 +45,7 @@ const Register = ({ store: { login } }) => (
       }}
     >
       {({ handleChange, handleBlur, values, errors, handleSubmit }) => (
-        <View>
+        <View style={styles.inputsWrap}>
           <TextInput
             style={styles.input}
             placeholder="email"
@@ -72,7 +70,15 @@ const Register = ({ store: { login } }) => (
             value={values.password}
           />
 
-          <Button onPress={handleSubmit} title="Submit" />
+          <View style={styles.buttonsWrap}>
+            <Button
+              onPress={handleSubmit}
+              styleName="secondary"
+              title="Register"
+            >
+              <Text>REGISTER</Text>
+            </Button>
+          </View>
         </View>
       )}
     </Formik>
@@ -92,7 +98,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#f3f3f3',
   },
   formTitle: {
     fontSize: 24,
@@ -102,14 +108,24 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   input: {
-    borderColor: '#888',
-    borderWidth: 1,
     minWidth: 200,
-    padding: 8,
+    width: '100%',
+    marginBottom: 2,
   },
   secondaryButton: {
     fontSize: 11,
   },
+  inputsWrap: {
+    width: '100%',
+    paddingHorizontal: 20,
+  },
+  buttonsWrap: {
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  submitButton: {
+    width: 100,
+  }
 });
 
 export default inject('store')(Register);
