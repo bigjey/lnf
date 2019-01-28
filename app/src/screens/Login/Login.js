@@ -10,6 +10,7 @@ import { inject } from 'mobx-react';
 import { TextInput, Button, Text, Title } from '@shoutem/ui';
 
 import { setRootLayout } from '../../services/navigation';
+import { COLORS } from "../../constants";
 
 const Register = ({ store: { login } }) => (
   <View style={styles.container}>
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f3f3f3',
+    backgroundColor: COLORS.BACKGROUND,
   },
   formTitle: {
     fontSize: 24,

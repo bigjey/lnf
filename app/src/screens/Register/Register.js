@@ -8,6 +8,7 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import { inject } from 'mobx-react';
 import { TextInput, Button, Text, Title } from '@shoutem/ui';
+import { COLORS } from '../../constants';
 
 import { setRootLayout } from '../../services/navigation';
 
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f3f3f3',
+    backgroundColor: COLORS.BACKGROUND,
   },
   formTitle: {
     fontSize: 24,

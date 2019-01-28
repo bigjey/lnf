@@ -1,19 +1,18 @@
 import React from 'react';
 import {
   StyleSheet,
-  Text,
-  View,
-  FlatList,
   TouchableOpacity,
 } from 'react-native';
 import { inject, observer } from 'mobx-react';
+import { ListView, Row, Image, View, Subtitle, Caption } from '@shoutem/ui';
+import { COLORS } from "../../constants";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    backgroundColor: COLORS.BACKGROUND,
   },
   postTitle: {
     fontSize: 20,
@@ -22,26 +21,28 @@ const styles = StyleSheet.create({
   },
 });
 
-let PostItem = ({ id, description }) => (
-  <Text style={styles.postTitle}>
-    {id} {description && `- ${description}`}
-  </Text>
+let PostItem = ({ post: {id, description, image, breed, gender} }) => (
+  <Row style={{marginBottom: 2}}>
+    <Image
+      styleName="small rounded-corners"
+      source={{ uri: image }}
+    />
+    <View styleName="vertical stretch space-between">
+      <Subtitle>{breed} - {gender}</Subtitle>
+      <Caption>{description}</Caption>
+    </View>
+  </Row>
 );
 
 PostItem = inject('store')(observer(PostItem));
 
 const PostsList = ({ componentId, store: { posts, showPost } }) => (
   <View style={styles.container}>
-    <FlatList
+    <ListView
       data={posts}
-      keyExtractor={({ id }) => String(id)}
-      renderItem={({ item: post }) => (
-        <TouchableOpacity
-          key={post.id}
-          style={styles.container}
-          onPress={() => showPost(post.id, componentId)}
-        >
-          <PostItem {...post} />
+      renderRow={post => (
+        <TouchableOpacity onPress={() => showPost(post.id, componentId)}>
+          <PostItem post={post} />
         </TouchableOpacity>
       )}
     />

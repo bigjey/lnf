@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { inject, observer } from 'mobx-react';
+import {COLORS} from "../../constants";
+import { Title, Subtitle, Text, ImageGallery, ImageGalleryOverlay } from '@shoutem/ui';
 
 const PostDetails = ({
   store: {
@@ -8,24 +10,30 @@ const PostDetails = ({
   },
 }) => (
     <View style={styles.container}>
-      <Text>Post Details</Text>
-      <Text>id: {id}</Text>
-      {description && <Text>{description}</Text>}
+      <Title>Post Details</Title>
+      {description && <Subtitle>{description}</Subtitle>}
       {breed && <Text>{breed}</Text>}
       {gender && <Text>{gender}</Text>}
-      {image && <Image
-        style={{ width: 128, height: 128 }}
-        source={{ uri: image }}
-      />}
+      {image &&
+        <ImageGallery
+          data={[{source: {uri: image}}]}
+          selectedIndex={1}
+          renderImageOverlay={image => (
+            <ImageGalleryOverlay
+              styleName="full-screen"
+              title={''}
+              description={''}
+            />
+          )}
+        />
+      }
     </View>
   );
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: COLORS.BACKGROUND,
   },
 });
 

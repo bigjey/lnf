@@ -75,6 +75,6 @@ export default () => {
     await store.checkAuth();
 
     // test nav
-    // await setRootLayout('home');
+    await setRootLayout('app.postDetails');
   });
 };
