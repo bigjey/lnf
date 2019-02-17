@@ -50,7 +50,7 @@ class AppState {
 
       await this.loadPosts();
 
-      setRootLayout('home');
+      await setRootLayout('home');
     } catch (err) {
       console.log(err);
     }
@@ -62,7 +62,7 @@ class AppState {
       await AsyncStorage.removeItem(TOKEN_STORAGE_KEY);
       delete axios.defaults.headers.common['Authorization'];
       this.user = null;
-      setRootLayout('login');
+      await setRootLayout('login');
     } catch (err) {
       console.log(err);
     }
@@ -74,6 +74,7 @@ class AppState {
       const { data } = await axios.get('/api/post');
 
       this.posts = data;
+      console.log('posts: ', data);
     } catch (err) {
       console.log({ ...err }, err);
     }

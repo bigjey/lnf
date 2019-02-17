@@ -6,7 +6,8 @@ import { setRootLayout } from '../services/navigation';
 
 import store from '../store';
 
-import TestScreen from './TestScreen/TestScreen';
+import CameraScreen from './CameraScreen/CameraScreen';
+import CreatePost from './CreatePost/CreatePost';
 import Login from './Login/Login';
 import Register from './Register/Register';
 import Placeholder from './Placeholder/Placeholder';
@@ -16,8 +17,15 @@ import Settings from './Settings/Settings';
 
 export default () => {
   Navigation.registerComponentWithRedux(
+    'app.camera',
+    () => CameraScreen,
+    Provider,
+    store
+  );
+
+  Navigation.registerComponentWithRedux(
     'app.main',
-    () => TestScreen,
+    () => CameraScreen,
     Provider,
     store
   );
@@ -52,7 +60,7 @@ export default () => {
 
   Navigation.registerComponentWithRedux(
     'app.createPost',
-    () => () => <Placeholder>Create Post</Placeholder>,
+    () => CreatePost,
     Provider,
     store
   );
@@ -75,6 +83,6 @@ export default () => {
     await store.checkAuth();
 
     // test nav
-    await setRootLayout('app.postDetails');
+    // await setRootLayout('main');
   });
 };

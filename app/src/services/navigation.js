@@ -49,10 +49,27 @@ const settings = {
   },
 };
 
-const createPost = {
+const camera = {
   component: {
-    name: 'app.createPost',
+    name: 'app.camera',
   },
+};
+
+const createPost = { //app.camera'
+  stack: {
+    children: [
+      {
+        component: {
+          name: 'app.createPost',
+        },
+      }
+    ],
+    options: {
+      bottomTab: {
+        text: 'Add Post',
+      },
+    },
+  }
 };
 
 const home = {
@@ -70,14 +87,6 @@ const home = {
       },
       {
         ...createPost,
-        component: {
-          ...createPost.component,
-          options: {
-            bottomTab: {
-              text: 'Add Post',
-            },
-          },
-        },
       },
       {
         ...settings,
@@ -102,6 +111,8 @@ export const layouts = {
   home,
   postsList,
   postDetails,
+  createPost,
+  camera,
 };
 
 export const setRootLayout = (layout = null) => {

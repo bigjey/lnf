@@ -8,5 +8,6 @@
     "migrate": "cd server && npx sequelize db:migrate",
     "migrateAll": "cd server && npx sequelize db:migrate:undo:all && npx sequelize db:migrate",
     "server:start:dev": "cd server && nodemon ."
-  }
+  },
+  "dependencies": {}
 }

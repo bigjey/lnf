@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import {COLORS} from "../../constants";
-import { Title, Subtitle, Text, ImageGallery, ImageGalleryOverlay } from '@shoutem/ui';
+import { Title, Subtitle, Text, InlineGallery, ImageGalleryOverlay, Heading } from '@shoutem/ui';
 
 const PostDetails = ({
   store: {
@@ -10,14 +10,12 @@ const PostDetails = ({
   },
 }) => (
     <View style={styles.container}>
-      <Title>Post Details</Title>
-      {description && <Subtitle>{description}</Subtitle>}
-      {breed && <Text>{breed}</Text>}
-      {gender && <Text>{gender}</Text>}
+      <Heading style={styles.postHeader}>Post Details</Heading>
       {image &&
-        <ImageGallery
+        <InlineGallery
+          style={styles.postImages}
           data={[{source: {uri: image}}]}
-          selectedIndex={1}
+          selectedIndex={0}
           renderImageOverlay={image => (
             <ImageGalleryOverlay
               styleName="full-screen"
@@ -27,6 +25,9 @@ const PostDetails = ({
           )}
         />
       }
+      {description && <Title style={styles.postDescription}>{description}</Title>}
+      {breed && <Subtitle>{breed}</Subtitle>}
+      {gender && <Subtitle>{gender}</Subtitle>}
     </View>
   );
 
@@ -34,6 +35,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.BACKGROUND,
+    padding: 10
+  },
+  postHeader: {
+    textAlign: 'center',
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  postImages: {},
+  postDescription: {
+    marginTop: 20,
+    marginBottom: 10,
   },
 });
 

@@ -10,8 +10,6 @@ import { COLORS } from "../../constants";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
     backgroundColor: COLORS.BACKGROUND,
   },
   postTitle: {
@@ -23,12 +21,15 @@ const styles = StyleSheet.create({
 
 let PostItem = ({ post: {id, description, image, breed, gender} }) => (
   <Row style={{marginBottom: 2}}>
-    <Image
-      styleName="small rounded-corners"
-      source={{ uri: image }}
-    />
+    {
+      image ? 
+      <Image
+        styleName="small rounded-corners"
+        source={{ uri: image }}
+      /> : null
+    }
     <View styleName="vertical stretch space-between">
-      <Subtitle>{breed} - {gender}</Subtitle>
+    <Subtitle>{breed} - {gender}</Subtitle>
       <Caption>{description}</Caption>
     </View>
   </Row>
