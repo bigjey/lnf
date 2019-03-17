@@ -8,4 +8,6 @@ router
   .post(checkAuth, controller.createPost)
   .get(checkAuth, controller.getAllPosts);
 
+router.route('/:id').delete(checkAuth, controller.deletePost);
+
 module.exports = router;

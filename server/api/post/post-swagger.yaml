@@ -19,6 +19,10 @@ paths:
                   type: string
                 image:
                   type: string(base64)
+                lat:
+                  type: float
+                lng:
+                  type: float
                 gender:
                   type: string
                   oneOf:
@@ -28,6 +32,8 @@ paths:
                 description: some crazy dog is wandering around.. send help
                 breed: bulldog
                 gender: FEMALE
+                lat: 50.4547
+                lng: 30.5238
       responses:
         '200':
           description: Post object
@@ -43,12 +49,56 @@ paths:
       tags:
         - Post
       summary: Get all Posts
+      parameters:
+        - in: query
+          name: userId
+          schema:
+            type: integer
+          description: User ID
       responses:
         '200':
           description: List with all Post objectecs
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/models/Post'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+  /api/post/{postId}:
+    delete:
+      security:
+        - jwt: []
+      tags:
+        - Post
+      summary: Delete post by id
+      parameters:
+        - in: path
+          name: postId # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+          description: Post ID
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        description:
+          type: string
+        breed:
+          type: string
+        image:
+          type: string(base64)
+        lat:
+          type: float
+        lng:
+          type: float
+        gender:
+          type: string
+          oneOf:
+            - MALE
+            - FEMALE
+        createdAt:
+          type: date
+        updateddAt:
+          type: date
