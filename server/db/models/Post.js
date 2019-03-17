@@ -8,30 +8,42 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       createdAt: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       description: {
         type: DataTypes.TEXT,
-        defaultValue: null
+        defaultValue: null,
       },
       breed: {
         type: DataTypes.STRING,
-        defaultValue: null
+        defaultValue: null,
       },
       gender: {
         type: DataTypes.ENUM('MALE', 'FEMALE'),
-        defaultValue: null
+        defaultValue: null,
       },
       image: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+      },
+      lat: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+        defaultValue: null,
+        validate: { min: -90, max: 90 },
+      },
+      lng: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+        defaultValue: null,
+        validate: { min: -180, max: 180 },
       },
       userId: {
         type: DataTypes.INTEGER,
@@ -39,20 +51,27 @@ module.exports = (sequelize, DataTypes) => {
         references: {
           model: 'User',
           key: 'id',
-          as: 'userId'
+          as: 'userId',
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade'
-      }
+        onDelete: 'cascade',
+      },
     },
     {
-      tableName: 'post'
+      tableName: 'post',
+      validate: {
+        bothCoordsOrNone() {
+          if ((this.lat === null) !== (this.lng === null)) {
+            throw new Error('Require either both lat and lng or neither');
+          }
+        },
+      },
     }
   );
 
   Post.associate = ({ User }) => {
     Post.belongsTo(User, {
-      foreignKey: 'userId'
+      foreignKey: 'userId',
     });
   };
 
