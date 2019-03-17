@@ -9,6 +9,14 @@ import { Formik } from 'formik';
 import RNPickerSelect from 'react-native-picker-select';
 import Icon from 'react-native-vector-icons/Feather';
 
+const ImagePreview = props => props.uri ? (
+  <Image
+    styleName="large-banner"
+    source={{ uri: props.uri}}
+    style={styles.image}
+  />
+) : null;
+
 class CreatePost extends Component {
   options = {
     title: 'Add picture',
@@ -20,14 +28,17 @@ class CreatePost extends Component {
 
   state = {
     photo: '',
-    loading: false,
+    image: '',
+    loadingImage: false,
+    submitting: false,
+    type: '',
   }
 
   addImage = (updateValue) => {
-    this.setState({loading: true})
+    this.setState({loadingImage: true})
     ImagePicker.showImagePicker(this.options, response => {
       updateValue(response.uri);
-      this.setState({picture: response.uri, loading: false});
+      this.setState({picture: response.uri, image: response.data, loadingImage: false, type: response.type});
     })
   }
 
@@ -37,11 +48,12 @@ class CreatePost extends Component {
   }
     
   render() {
-    const { picture, loading } = this.state;
+    const { picture, loadingImage, submitting } = this.state;
     return (
       <View style={styles.container}>
         <Formik
-          initialValues={{ breed: '', gender: '', description: '', picture: '' }}
+          enableReinitialize={true}
+          initialValues={{ breed: '', gender: '', description: '' }}
           validate={values => {
             let errors = {};
             if (!values.breed) {
@@ -52,7 +64,19 @@ class CreatePost extends Component {
             }
             return errors;
           }}
-          onSubmit={values => console.log('values: ', values)}
+          onSubmit={async values => {
+            const { image, type } = this.state;
+            const { store: { addPost } } = this.props;
+            const data = {...values, image: `data:${type};base64,${image}`};
+            console.log('submitting data: ', data);
+            this.setState({submitting: true});
+            try {
+              await addPost(data);
+              this.setState({submitting: false});
+            } catch (e) {
+              console.log('post failed: ', e);
+            }
+          }}
         >
           {({
             values,
@@ -64,15 +88,13 @@ class CreatePost extends Component {
             isSubmitting,
           }) => (
             <View>
-              { !loading ? 
-                <Image
-                  styleName="large-banner"
-                  source={{ uri: values.picture}}
-                  style={styles.image}
+              { !loadingImage ? 
+                <ImagePreview
+                  uri={picture}
                 /> : 
                 <View style={styles.loader}><Icon name="loader" size={30} color="#ccc" /></View>
               }
-              <Button onPress={() => this.addImage(handleChange('picture'))}><Text>Add picture</Text></Button>
+              <Button onPress={() => this.addImage(picture => this.setState({picture}))}><Text>Add picture</Text></Button>
               <TextInput
                 style={styles.input}
                 placeholder="breed"
@@ -83,7 +105,7 @@ class CreatePost extends Component {
                 value={values.breed}
               />
               <RNPickerSelect
-                placeholder={{label: 'Gender', value: null}}
+                placeholder={{label: 'Gender', value: ''}}
                 items={[{value: 'MALE', label: 'Male'}, {value: 'FEMALE', label: 'Female'}]}
                 onValueChange={handleChange('gender')}
                 style={pickerSelectStyles}
@@ -98,7 +120,7 @@ class CreatePost extends Component {
                 keyboardType="email-address"
                 value={values.description}
               />
-              <Button type="submit" onPress={handleSubmit}>
+              <Button type="submit" onPress={handleSubmit} disabled={submitting}>
                 <Text>Submit</Text>
               </Button>
             </View>

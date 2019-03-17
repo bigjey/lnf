@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
+  RefreshControl,
+  FlatList
 } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { ListView, Row, Image, View, Subtitle, Caption } from '@shoutem/ui';
@@ -37,17 +39,37 @@ let PostItem = ({ post: {id, description, image, breed, gender} }) => (
 
 PostItem = inject('store')(observer(PostItem));
 
-const PostsList = ({ componentId, store: { posts, showPost } }) => (
-  <View style={styles.container}>
-    <ListView
-      data={posts}
-      renderRow={post => (
-        <TouchableOpacity onPress={() => showPost(post.id, componentId)}>
-          <PostItem post={post} />
-        </TouchableOpacity>
-      )}
-    />
-  </View>
-);
+class PostsList extends Component {
+  state = {
+    refreshing: false,
+  }
+
+  render() {
+    const { componentId, store: { posts, showPost, loadPosts } } = this.props;
+    const { refreshing } = this.state;
+
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={posts}
+          renderItem={({item}) => (
+            <TouchableOpacity onPress={() => showPost(item.id, componentId)}>
+              <PostItem post={item} />
+            </TouchableOpacity>
+          )}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => {
+                console.log('starting refresh');
+                loadPosts();
+              }}
+            />
+          }
+        />
+      </View>
+    )
+  }
+}
 
 export default inject('store')(observer(PostsList));

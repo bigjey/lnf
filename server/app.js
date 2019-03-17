@@ -13,8 +13,8 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 app.use(cors());
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false, limit: 20 * 1024 * 1024 }));
+app.use(bodyParser.json({ limit: 20 * 1024 * 1024}));
 
 if (process.env.NODE_ENV !== 'production') {
   require('./utils/setupApiDocs')(app);

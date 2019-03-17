@@ -83,6 +83,6 @@ export default () => {
     await store.checkAuth();
 
     // test nav
-    // await setRootLayout('main');
+    // await setRootLayout('createPost');
   });
 };

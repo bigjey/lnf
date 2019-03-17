@@ -6,22 +6,21 @@ import {
 } from 'react-native';
 import { Formik } from 'formik';
 import axios from 'axios';
-import { inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import { TextInput, Button, Text, Title } from '@shoutem/ui';
 import { COLORS } from '../../constants';
+import Toaster, { ToastStyles } from 'react-native-toaster'
 
 import { setRootLayout } from '../../services/navigation';
 
-const Register = ({ store: { login } }) => (
+const Register = ({ store: { register, error, clearError } }) => (
   <View style={styles.container}>
     <Text style={styles.formTitle}>Create new Account</Text>
     <Formik
       initialValues={{ email: '', password: '' }}
-      onSubmit={async (values, { setErrors }) => {
+      onSubmit={async ({ email, password }, { setErrors }) => {
         try {
-          await axios.post('/auth/register', values);
-
-          setRootLayout('login');
+          await register(email, password);
         } catch (error) {
           if (
             error.response &&
@@ -87,10 +86,15 @@ const Register = ({ store: { login } }) => (
       style={styles.secondaryButton}
       onPress={() => {
         setRootLayout('login');
+        clearError();
       }}
     >
       <Text>Sign In</Text>
     </TouchableOpacity>
+    {!!error && <Toaster message={{
+      text: error,
+      styles: ToastStyles.error,
+    }} onHide={clearError} />}
   </View>
 );
 
@@ -129,4 +133,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject('store')(Register);
+export default inject('store')(observer(Register));

@@ -6,30 +6,30 @@ import {
 } from 'react-native';
 import { Formik } from 'formik';
 import axios from 'axios';
-import { inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import { TextInput, Button, Text, Title } from '@shoutem/ui';
+import Toaster, { ToastStyles } from 'react-native-toaster';
+
 
 import { setRootLayout } from '../../services/navigation';
 import { COLORS } from "../../constants";
 
-const Register = ({ store: { login } }) => (
+const Login = ({ store: { login, error, clearError } }) => (
   <View style={styles.container}>
     <Title style={styles.formTitle}>Sign In</Title>
     <Formik
       initialValues={{ email: '', password: '' }}
-      onSubmit={async (values, { setErrors }) => {
+      onSubmit={async ({ email, password }, { setErrors }) => {
         try {
-          const { data } = await axios.post('/auth/login', values);
-
-          login(data.token);
-        } catch (error) {
+          await login(email, password);
+        } catch (err) {
           if (
-            error.response &&
-            error.response.data &&
-            error.response.data.errors
+            err.response &&
+            err.response.data &&
+            err.response.data.errors
           ) {
             setErrors(
-              error.response.data.errors.reduce((errors, error) => {
+              err.response.data.errors.reduce((errors, error) => {
                 if (!errors[error.path]) {
                   errors[error.path] = error.message;
                 }
@@ -41,7 +41,7 @@ const Register = ({ store: { login } }) => (
             return;
           }
 
-          console.log({ ...error }, error);
+          console.log({ ...err }, err);
         }
       }}
     >
@@ -87,10 +87,15 @@ const Register = ({ store: { login } }) => (
       style={styles.secondaryButton}
       onPress={() => {
         setRootLayout('register');
+        clearError();
       }}
     >
       <Text>Create new Account</Text>
     </TouchableOpacity>
+    {!!error && <Toaster message={{
+      text: error,
+      styles: ToastStyles.error,
+    }} onHide={clearError} />}
   </View>
 );
 
@@ -129,4 +134,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject('store')(Register);
+export default inject('store')(observer(Login));

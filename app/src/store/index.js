@@ -13,6 +13,8 @@ class AppState {
 
   @observable posts = [];
 
+  @observable error = '';
+
   @computed
   get activePost() {
     return this.posts.find(p => p.id === this.activePostId);
@@ -25,11 +27,16 @@ class AppState {
     this.value += amount;
   }
 
+  @action.bound
+  clearError() {
+    this.error = '';
+  }
+
   async checkAuth() {
     const token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
 
     if (token) {
-      this.login(token);
+      this.postLogin(token);
     } else {
       this.logout();
     }
@@ -38,22 +45,29 @@ class AppState {
   }
 
   @action.bound
-  async login(token) {
+  async login(email, password) {
+    this.error = '';
+    try {
+      const { data } = await axios.post('/auth/login', { email, password });
+      await this.postLogin(data.token);
+      return data;
+    } catch (error) {
+      console.log('login failed: ', error);
+      this.error = 'Login failed';
+      throw error;
+    }
+  }
+
+  @action.bound
+  async postLogin(token) {
     if (!token) {
       throw new Error('no token');
     }
-
-    try {
-      await AsyncStorage.setItem(TOKEN_STORAGE_KEY, token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      this.user = 1;
-
-      await this.loadPosts();
-
-      await setRootLayout('home');
-    } catch (err) {
-      console.log(err);
-    }
+    await AsyncStorage.setItem(TOKEN_STORAGE_KEY, token);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    this.user = 1;
+    await this.loadPosts();
+    setRootLayout('home');
   }
 
   @action.bound
@@ -69,6 +83,18 @@ class AppState {
   }
 
   @action.bound
+  async register(email, password) {
+    this.error = '';
+    try {
+      await axios.post('/auth/register', { email, password });
+      setRootLayout('login');
+    } catch (e) {
+      this.error = 'Failed to register';
+      console.log('register error: ', e);
+    }
+  }
+
+  @action.bound
   async loadPosts() {
     try {
       const { data } = await axios.get('/api/post');
@@ -76,6 +102,7 @@ class AppState {
       this.posts = data;
       console.log('posts: ', data);
     } catch (err) {
+      this.error = 'Failed to load posts!';
       console.log({ ...err }, err);
     }
   }
@@ -89,6 +116,18 @@ class AppState {
     this.activePostId = id;
 
     pushToCurrentStack(componentId, 'postDetails');
+  }
+
+  @action.bound
+  async addPost(data = {}) {
+    try {
+      const res = await axios.post('/api/post', data);
+      await this.loadPosts();
+      setRootLayout('home');
+      return res;
+    } catch (e) {
+      console.log('post error: ', e);
+    }
   }
 }
 
