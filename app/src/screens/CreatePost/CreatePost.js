@@ -17,15 +17,15 @@ const ImagePreview = props => props.uri ? (
   />
 ) : null;
 
-class CreatePost extends Component {
-  options = {
-    title: 'Add picture',
-    storageOptions: {
-      skipBackup: true,
-      path: 'images',
-    },
-  };
+const options = {
+  title: 'Add picture',
+  storageOptions: {
+    skipBackup: true,
+    path: 'images',
+  },
+};
 
+class CreatePost extends Component {
   state = {
     photo: '',
     image: '',
@@ -36,7 +36,7 @@ class CreatePost extends Component {
 
   addImage = (updateValue) => {
     this.setState({loadingImage: true})
-    ImagePicker.showImagePicker(this.options, response => {
+    ImagePicker.showImagePicker(options, response => {
       updateValue(response.uri);
       this.setState({picture: response.uri, image: response.data, loadingImage: false, type: response.type});
     })

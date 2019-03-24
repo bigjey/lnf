@@ -6,25 +6,18 @@ import { setRootLayout, pushToCurrentStack } from '../services/navigation';
 import { TOKEN_STORAGE_KEY } from '../constants';
 
 class AppState {
-  @observable value = 1;
+
+  @observable error = null;
 
   @observable user = null;
-  @observable activePostId = null;
 
   @observable posts = [];
+  @observable activePostId = null;
 
-  @observable error = '';
 
   @computed
   get activePost() {
     return this.posts.find(p => p.id === this.activePostId);
-  }
-
-  constructor() {}
-
-  @action.bound
-  inc(amount = 1) {
-    this.value += amount;
   }
 
   @action.bound

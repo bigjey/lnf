@@ -116,8 +116,6 @@ export const layouts = {
 };
 
 export const setRootLayout = (layout = null) => {
-  console.log(layouts[layout]);
-
   if (!layouts[layout]) {
     throw new Error(`no data for '${layout}' layout`);
   }
