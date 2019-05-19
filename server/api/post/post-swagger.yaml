@@ -55,6 +55,29 @@ paths:
           schema:
             type: integer
           description: User ID
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Pagination
+        - in: query
+          name: order
+          schema:
+            type: string
+          description: Order in format \<field_direction\>. Direction is either asc or desc.
+        - in: query
+          name: breed
+          schema:
+            type: string
+          description: Breed to search
+        - in: query
+          name: gender
+          schema:
+            type: string
+            oneOf:
+              - MALE
+              - FEMALE
+          description: Breed to search
       responses:
         '200':
           description: List with all Post objectecs
