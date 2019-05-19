@@ -6,10 +6,10 @@ import {
   FlatList,
 } from 'react-native';
 import { inject, observer } from 'mobx-react';
-import { ListView, Row, Image, View, Subtitle, Caption } from '@shoutem/ui';
+import { View } from '@shoutem/ui';
 import { COLORS } from '../../constants';
 import Toaster, { ToastStyles } from 'react-native-toaster';
-import PostItem from '../../components/PostItem';
+import PostItem from '../../components/Post/PostItem';
 
 const styles = StyleSheet.create({
   container: {

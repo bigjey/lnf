@@ -3,7 +3,7 @@ import { StyleSheet, FlatList, RefreshControl } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { COLORS } from '../../constants';
 import { Heading, View, Button, Text } from '@shoutem/ui';
-import PostItem from '../../components/PostItem';
+import PostItem from '../../components/Post/PostItem';
 
 class Settings extends Component {
   state = {

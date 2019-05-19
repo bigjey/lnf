@@ -103,6 +103,12 @@ const home = {
   },
 };
 
+const search = {
+  component: {
+    name: 'app.search',
+  },
+};
+
 export const layouts = {
   loader,
   login,
@@ -113,6 +119,7 @@ export const layouts = {
   postDetails,
   createPost,
   camera,
+  search,
 };
 
 export const setRootLayout = (layout = null) => {

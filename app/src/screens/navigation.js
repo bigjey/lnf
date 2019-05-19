@@ -14,6 +14,7 @@ import Placeholder from './Placeholder/Placeholder';
 import PostsList from './PostsList/PostsList';
 import PostDetails from './PostDetails/PostDetails';
 import Settings from './Settings/Settings';
+import Search from './Search/Search';
 
 export default () => {
   Navigation.registerComponentWithRedux(
@@ -71,9 +72,17 @@ export default () => {
     Provider,
     store
   );
+
   Navigation.registerComponentWithRedux(
     'app.register',
     () => Register,
+    Provider,
+    store
+  );
+
+  Navigation.registerComponentWithRedux(
+    'app.search',
+    () => Search,
     Provider,
     store
   );
@@ -83,6 +92,6 @@ export default () => {
     await store.authStore.checkAuth();
 
     // test nav
-    // await setRootLayout('createPost');
+    await setRootLayout('search');
   });
 };
