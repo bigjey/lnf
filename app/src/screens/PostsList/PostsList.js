@@ -31,7 +31,10 @@ class PostsList extends Component {
   render() {
     const {
       componentId,
-      store: { posts, showPost, loadPosts, error, clearError },
+      store: {
+        postStore: { posts, showPost, loadPosts },
+        uiStore: { error, clearError }
+      },
     } = this.props;
     const { refreshing } = this.state;
 

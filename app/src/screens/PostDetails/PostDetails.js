@@ -15,7 +15,7 @@ import MapView from 'react-native-maps';
 
 const PostDetails = ({
   store: {
-    activePost: { id, description, gender, breed, image, createdAt, lat, lng },
+    postStore: { activePost: { id, description, gender, breed, image, createdAt, lat, lng } },
   },
 }) => (
   <ScrollView style={styles.container}>

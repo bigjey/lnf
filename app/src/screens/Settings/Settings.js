@@ -21,7 +21,7 @@ class Settings extends Component {
 
   loadMyPosts = async () => {
     const {
-      store: { getMyPosts },
+      store: { postStore: { getMyPosts } },
     } = this.props;
     const posts = await getMyPosts();
     this.setState({ posts });
@@ -29,7 +29,7 @@ class Settings extends Component {
 
   remove = async postId => {
     const {
-      store: { removePost, getMyPosts },
+      store: { postStore: { removePost } },
     } = this.props;
     await removePost(postId);
     this.loadMyPosts();
@@ -37,7 +37,7 @@ class Settings extends Component {
 
   render() {
     const {
-      store: { logout, removePost },
+      store: { authStore: { logout } },
     } = this.props;
     const { posts, refreshing } = this.state;
 

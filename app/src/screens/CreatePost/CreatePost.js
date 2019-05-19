@@ -81,7 +81,7 @@ class CreatePost extends Component {
           onSubmit={async values => {
             const { image, type } = this.state;
             const {
-              store: { addPost },
+              store: { uiStore: { addPost } },
             } = this.props;
             const location = await this.getLocation();
             const data = {

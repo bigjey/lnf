@@ -14,7 +14,7 @@ import Toaster, { ToastStyles } from 'react-native-toaster';
 import { setRootLayout } from '../../services/navigation';
 import { COLORS } from "../../constants";
 
-const Login = ({ store: { login, error, clearError } }) => (
+const Login = ({ store: { authStore: { login }, uiStore: { error, clearError } } }) => (
   <View style={styles.container}>
     <Title style={styles.formTitle}>Sign In</Title>
     <Formik

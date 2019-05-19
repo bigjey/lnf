@@ -80,7 +80,7 @@ export default () => {
 
   Navigation.events().registerAppLaunchedListener(async () => {
     await setRootLayout('loader');
-    await store.checkAuth();
+    await store.authStore.checkAuth();
 
     // test nav
     // await setRootLayout('createPost');

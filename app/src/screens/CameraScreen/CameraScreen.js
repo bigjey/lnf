@@ -27,7 +27,6 @@ class CameraScreen extends Component {
   }
 
   render() {
-    const { store: { value, inc, logout } } = this.props;
     return (
       <View style={styles.container}>
         <RNCamera 

@@ -13,7 +13,7 @@ import Toaster, { ToastStyles } from 'react-native-toaster'
 
 import { setRootLayout } from '../../services/navigation';
 
-const Register = ({ store: { register, error, clearError } }) => (
+const Register = ({ store: { authStore: { register }, uiStore: { error, clearError } } }) => (
   <View style={styles.container}>
     <Text style={styles.formTitle}>Create new Account</Text>
     <Formik
