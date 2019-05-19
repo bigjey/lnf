@@ -1,23 +1,96 @@
-import React from 'react';
-import { View, Text, Button, StyleSheet, AsyncStorage } from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, FlatList, RefreshControl } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { COLORS } from '../../constants';
-import { Heading } from '@shoutem/ui';
+import { Heading, View, Button, Text } from '@shoutem/ui';
+import PostItem from '../../components/PostItem';
 
-const Register = ({ store: { logout } }) => (
-  <View style={styles.container}>
-    <Heading style={styles.postHeader}>Settings Screen</Heading>
-    <Button title="Log Out" onPress={logout} />
-  </View>
-);
+class Settings extends Component {
+  state = {
+    posts: [],
+    refreshing: false,
+  };
+
+  async componentDidMount() {
+    try {
+      this.loadMyPosts();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  loadMyPosts = async () => {
+    const {
+      store: { getMyPosts },
+    } = this.props;
+    const posts = await getMyPosts();
+    this.setState({ posts });
+  };
+
+  remove = async postId => {
+    const {
+      store: { removePost, getMyPosts },
+    } = this.props;
+    await removePost(postId);
+    this.loadMyPosts();
+  };
+
+  render() {
+    const {
+      store: { logout, removePost },
+    } = this.props;
+    const { posts, refreshing } = this.state;
+
+    return (
+      <View style={styles.container}>
+        <Heading style={styles.header}>Settings Screen</Heading>
+        <Heading style={styles.postsHeader}>My posts</Heading>
+
+        <FlatList
+          style={styles.list}
+          data={posts}
+          renderItem={({ item }) => (
+            <PostItem remove={() => this.remove(item.id)} post={item} />
+          )}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={this.loadMyPosts}
+            />
+          }
+        />
+
+        <Button onPress={logout}>
+          <Text>Log Out</Text>
+        </Button>
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
+  list: {
+    width: '100%',
+    flex: 1,
+  },
   container: {
+    paddingTop: 30,
     flex: 1,
     alignItems: 'center',
-    padding: 10,
+    paddingBottom: 20,
     backgroundColor: COLORS.BACKGROUND,
+  },
+  header: {
+    textAlign: 'center',
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  postsHeader: {
+    textAlign: 'center',
+    fontSize: 20,
+    marginTop: 10,
+    marginBottom: 20,
   },
 });
 
-export default inject('store')(observer(Register));
+export default inject('store')(observer(Settings));

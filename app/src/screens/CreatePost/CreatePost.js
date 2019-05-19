@@ -9,13 +9,14 @@ import { Formik } from 'formik';
 import RNPickerSelect from 'react-native-picker-select';
 import Icon from 'react-native-vector-icons/Feather';
 
-const ImagePreview = props => props.uri ? (
-  <Image
-    styleName="large-banner"
-    source={{ uri: props.uri}}
-    style={styles.image}
-  />
-) : null;
+const ImagePreview = props =>
+  props.uri ? (
+    <Image
+      styleName="large-banner"
+      source={{ uri: props.uri }}
+      style={styles.image}
+    />
+  ) : null;
 
 const options = {
   title: 'Add picture',
@@ -32,21 +33,34 @@ class CreatePost extends Component {
     loadingImage: false,
     submitting: false,
     type: '',
-  }
+  };
 
-  addImage = (updateValue) => {
-    this.setState({loadingImage: true})
+  getLocation = () =>
+    new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        data => resolve(data.coords),
+        error => reject(error)
+      );
+    });
+
+  addImage = updateValue => {
+    this.setState({ loadingImage: true });
     ImagePicker.showImagePicker(options, response => {
       updateValue(response.uri);
-      this.setState({picture: response.uri, image: response.data, loadingImage: false, type: response.type});
-    })
-  }
+      this.setState({
+        picture: response.uri,
+        image: response.data,
+        loadingImage: false,
+        type: response.type,
+      });
+    });
+  };
 
   goToCamera = () => {
     const { componentId } = this.props;
     pushToCurrentStack(componentId, 'camera');
-  }
-    
+  };
+
   render() {
     const { picture, loadingImage, submitting } = this.state;
     return (
@@ -66,13 +80,22 @@ class CreatePost extends Component {
           }}
           onSubmit={async values => {
             const { image, type } = this.state;
-            const { store: { addPost } } = this.props;
-            const data = {...values, image: `data:${type};base64,${image}`};
+            const {
+              store: { addPost },
+            } = this.props;
+            const location = await this.getLocation();
+            const data = {
+              ...values,
+              image: `data:${type};base64,${image}`,
+              lat: location.latitude,
+              lng: location.longitude,
+            };
+            console.log('location: ', location);
             console.log('submitting data: ', data);
-            this.setState({submitting: true});
+            this.setState({ submitting: true });
             try {
               await addPost(data);
-              this.setState({submitting: false});
+              this.setState({ submitting: false });
             } catch (e) {
               console.log('post failed: ', e);
             }
@@ -88,13 +111,20 @@ class CreatePost extends Component {
             isSubmitting,
           }) => (
             <View>
-              { !loadingImage ? 
-                <ImagePreview
-                  uri={picture}
-                /> : 
-                <View style={styles.loader}><Icon name="loader" size={30} color="#ccc" /></View>
-              }
-              <Button onPress={() => this.addImage(picture => this.setState({picture}))}><Text>Add picture</Text></Button>
+              {!loadingImage ? (
+                <ImagePreview uri={picture} />
+              ) : (
+                <View style={styles.loader}>
+                  <Icon name="loader" size={30} color="#ccc" />
+                </View>
+              )}
+              <Button
+                onPress={() =>
+                  this.addImage(picture => this.setState({ picture }))
+                }
+              >
+                <Text>Add picture</Text>
+              </Button>
               <TextInput
                 style={styles.input}
                 placeholder="breed"
@@ -105,8 +135,11 @@ class CreatePost extends Component {
                 value={values.breed}
               />
               <RNPickerSelect
-                placeholder={{label: 'Gender', value: ''}}
-                items={[{value: 'MALE', label: 'Male'}, {value: 'FEMALE', label: 'Female'}]}
+                placeholder={{ label: 'Gender', value: '' }}
+                items={[
+                  { value: 'MALE', label: 'Male' },
+                  { value: 'FEMALE', label: 'Female' },
+                ]}
                 onValueChange={handleChange('gender')}
                 style={pickerSelectStyles}
                 value={values.gender}
@@ -120,14 +153,18 @@ class CreatePost extends Component {
                 keyboardType="email-address"
                 value={values.description}
               />
-              <Button type="submit" onPress={handleSubmit} disabled={submitting}>
+              <Button
+                type="submit"
+                onPress={handleSubmit}
+                disabled={submitting}
+              >
                 <Text>Submit</Text>
               </Button>
             </View>
           )}
         </Formik>
       </View>
-    )
+    );
   }
 }
 
@@ -155,27 +192,27 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 2,
-  }
+  },
 });
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
-      fontSize: 16,
-      paddingVertical: 10,
-      paddingHorizontal: 15,
-      color: '#000',
-      paddingRight: 30,
-      marginBottom: 2,
-      backgroundColor: '#fff',
+    fontSize: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    color: '#000',
+    paddingRight: 30,
+    marginBottom: 2,
+    backgroundColor: '#fff',
   },
   inputAndroid: {
-      fontSize: 16,
-      paddingHorizontal: 15,
-      paddingVertical: 10,
-      color: '#000',
-      paddingRight: 30,
-      marginBottom: 2,
-      backgroundColor: '#fff',
+    fontSize: 16,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    color: '#000',
+    paddingRight: 30,
+    marginBottom: 2,
+    backgroundColor: '#fff',
   },
 });
 

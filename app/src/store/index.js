@@ -3,17 +3,16 @@ import { action, observable, computed } from 'mobx';
 import axios from 'axios';
 
 import { setRootLayout, pushToCurrentStack } from '../services/navigation';
-import { TOKEN_STORAGE_KEY } from '../constants';
+import { TOKEN_STORAGE_KEY, USER_ID } from '../constants';
 
 class AppState {
-
   @observable error = null;
 
   @observable user = null;
+  @observable userId = null;
 
   @observable posts = [];
   @observable activePostId = null;
-
 
   @computed
   get activePost() {
@@ -29,6 +28,7 @@ class AppState {
     const token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
 
     if (token) {
+      this.userId = await AsyncStorage.getItem(USER_ID);
       this.postLogin(token);
     } else {
       this.logout();
@@ -42,6 +42,8 @@ class AppState {
     this.error = '';
     try {
       const { data } = await axios.post('/auth/login', { email, password });
+      this.userId = data.userId;
+      await AsyncStorage.setItem(USER_ID, data.userId.toString());
       await this.postLogin(data.token);
       return data;
     } catch (error) {
@@ -67,6 +69,7 @@ class AppState {
   async logout() {
     try {
       await AsyncStorage.removeItem(TOKEN_STORAGE_KEY);
+      await AsyncStorage.removeItem(USER_ID);
       delete axios.defaults.headers.common['Authorization'];
       this.user = null;
       await setRootLayout('login');
@@ -91,7 +94,6 @@ class AppState {
   async loadPosts() {
     try {
       const { data } = await axios.get('/api/post');
-
       this.posts = data;
       console.log('posts: ', data);
     } catch (err) {
@@ -121,6 +123,23 @@ class AppState {
     } catch (e) {
       console.log('post error: ', e);
     }
+  }
+
+  @action.bound
+  async getMyPosts() {
+    const { data } = await axios.get(`/api/post?userId=${this.userId}`);
+    return data;
+  }
+
+  @action.bound
+  async removePost(postId = '') {
+    try {
+      await axios.delete(`/api/post/${postId}`);
+      await this.loadPosts();
+    } catch (e) {
+      console.log(e);
+    }
+    return;
   }
 }
 

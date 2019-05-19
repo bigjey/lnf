@@ -3,11 +3,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   RefreshControl,
-  FlatList
+  FlatList,
 } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { ListView, Row, Image, View, Subtitle, Caption } from '@shoutem/ui';
-import { COLORS } from "../../constants";
+import { COLORS } from '../../constants';
+import Toaster, { ToastStyles } from 'react-native-toaster';
+import PostItem from '../../components/PostItem';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,38 +23,23 @@ const styles = StyleSheet.create({
   },
 });
 
-let PostItem = ({ post: {id, description, image, breed, gender} }) => (
-  <Row style={{marginBottom: 2}}>
-    {
-      image ? 
-      <Image
-        styleName="small rounded-corners"
-        source={{ uri: image }}
-      /> : null
-    }
-    <View styleName="vertical stretch space-between">
-    <Subtitle>{breed} - {gender}</Subtitle>
-      <Caption>{description}</Caption>
-    </View>
-  </Row>
-);
-
-PostItem = inject('store')(observer(PostItem));
-
 class PostsList extends Component {
   state = {
     refreshing: false,
-  }
+  };
 
   render() {
-    const { componentId, store: { posts, showPost, loadPosts } } = this.props;
+    const {
+      componentId,
+      store: { posts, showPost, loadPosts, error, clearError },
+    } = this.props;
     const { refreshing } = this.state;
 
     return (
       <View style={styles.container}>
         <FlatList
           data={posts}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <TouchableOpacity onPress={() => showPost(item.id, componentId)}>
               <PostItem post={item} />
             </TouchableOpacity>
@@ -67,8 +54,17 @@ class PostsList extends Component {
             />
           }
         />
+        {!!error && (
+          <Toaster
+            message={{
+              text: error,
+              styles: ToastStyles.error,
+            }}
+            onHide={clearError}
+          />
+        )}
       </View>
-    )
+    );
   }
 }
 
