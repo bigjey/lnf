@@ -50,7 +50,7 @@ class AuthStore {
     await AsyncStorage.setItem(TOKEN_STORAGE_KEY, token);
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     this.user = 1;
-    await this.loadPosts();
+    await this.rootStore.postStore.loadPosts();
     setRootLayout('home');
   }
 

@@ -92,6 +92,6 @@ export default () => {
     await store.authStore.checkAuth();
 
     // test nav
-    await setRootLayout('search');
+    // await setRootLayout('search');
   });
 };

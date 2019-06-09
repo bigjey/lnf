@@ -55,21 +55,22 @@ const camera = {
   },
 };
 
-const createPost = { //app.camera'
+const createPost = {
+  //app.camera'
   stack: {
     children: [
       {
         component: {
           name: 'app.createPost',
         },
-      }
+      },
     ],
     options: {
       bottomTab: {
         text: 'Add Post',
       },
     },
-  }
+  },
 };
 
 const home = {
@@ -84,6 +85,9 @@ const home = {
             },
           },
         },
+      },
+      {
+        ...search,
       },
       {
         ...createPost,
