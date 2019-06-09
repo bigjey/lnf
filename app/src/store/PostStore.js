@@ -1,9 +1,8 @@
-import { AsyncStorage } from 'react-native';
 import { action, observable, computed } from 'mobx';
 import axios from 'axios';
 
 import { setRootLayout, pushToCurrentStack } from '../services/navigation';
-import { TOKEN_STORAGE_KEY, USER_ID } from '../constants';
+import { api } from '../constants';
 
 class PostStore {
   @observable posts = [];
@@ -21,7 +20,7 @@ class PostStore {
   @action.bound
   async loadPosts() {
     try {
-      const { data } = await axios.get('/api/post');
+      const { data } = await axios.get(api.post);
       this.posts = data;
       console.log('posts: ', data);
     } catch (err) {
@@ -44,7 +43,7 @@ class PostStore {
   @action.bound
   async addPost(data = {}) {
     try {
-      const res = await axios.post('/api/post', data);
+      const res = await axios.post(api.post, data);
       await this.loadPosts();
       setRootLayout('home');
       return res;
@@ -55,14 +54,14 @@ class PostStore {
 
   @action.bound
   async getMyPosts() {
-    const { data } = await axios.get(`/api/post?userId=${this.userId}`);
+    const { data } = await axios.get(`${api.post}?userId=${this.userId}`);
     return data;
   }
 
   @action.bound
   async removePost(postId = '') {
     try {
-      await axios.delete(`/api/post/${postId}`);
+      await axios.delete(`${api.post}/${postId}`);
       await this.loadPosts();
     } catch (e) {
       console.log(e);

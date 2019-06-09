@@ -4,7 +4,7 @@ import { Row, Image, View, Subtitle, Caption, Button } from '@shoutem/ui';
 import Icon from 'react-native-vector-icons/Feather';
 import moment from 'moment';
 
-const PostItem = ({
+export const PostItem = ({
   post: { id, description, image, breed, gender, createdAt },
   remove,
 }) => (

@@ -1,8 +1,9 @@
 import { AsyncStorage } from 'react-native';
 import { action, observable } from 'mobx';
 import axios from 'axios';
+import { api } from '../constants';
 
-import { setRootLayout, pushToCurrentStack } from '../services/navigation';
+import { setRootLayout } from '../services/navigation';
 import { TOKEN_STORAGE_KEY, USER_ID } from '../constants';
 
 class AuthStore {
@@ -30,7 +31,7 @@ class AuthStore {
   async login(email, password) {
     this.error = '';
     try {
-      const { data } = await axios.post('/auth/login', { email, password });
+      const { data } = await axios.post(api.login, { email, password });
       this.userId = data.userId;
       await AsyncStorage.setItem(USER_ID, data.userId.toString());
       await this.postLogin(data.token);
@@ -71,7 +72,7 @@ class AuthStore {
   async register(email, password) {
     this.rootStore.uiStore.error = '';
     try {
-      await axios.post('/auth/register', { email, password });
+      await axios.post(api.register, { email, password });
       setRootLayout('login');
     } catch (e) {
       this.rootStore.uiStore.error = 'Failed to register';
